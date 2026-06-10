@@ -156,8 +156,8 @@ export const Container = styled.div`
   min-height: 100vh;
 
   display: flex;
-
-  background: #eec6db;
+  background: linear-gradient(135deg, #d764c8, #65d3d4);
+  // background: #eec6db;
 `;
 
 export const LeftSide = styled.div`
@@ -181,7 +181,7 @@ export const Content = styled.div`
 `;
 
 export const Logo = styled.h1`
-  color: #d88ab3;
+  color: #fa7ec0;
 
   font-size: 2.2rem;
   font-weight: 700;
@@ -192,7 +192,7 @@ export const Logo = styled.h1`
 export const Welcome = styled.span`
   display: block;
 
-  color: #666;
+  color: #2b2b2b;
   font-size: 0.85rem;
 
   margin-bottom: 8px;
@@ -202,7 +202,7 @@ export const Title = styled.h2`
   font-size: 3rem;
   font-weight: 800;
 
-  color: #111;
+  color: #fefefe;
 
   margin-bottom: 32px;
 
@@ -345,7 +345,7 @@ export const RegisterLink = styled.button`
   border: none;
   background: transparent;
 
-  color: #d88ab3;
+  color: #f73b9f;
   font-weight: 600;
 
   cursor: pointer;
