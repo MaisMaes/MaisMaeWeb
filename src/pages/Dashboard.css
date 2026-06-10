@@ -1,0 +1,214 @@
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #eef2f7;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 240px;
+  background: #2d2d2d;
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 24px;
+}
+
+.logo {
+  color: #d48eb8;
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-bottom: 40px;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+
+  border-radius: 50%;
+  background: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user h4 {
+  font-size: 0.95rem;
+}
+
+.user span {
+  font-size: 0.8rem;
+  color: #bfbfbf;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  padding: 14px 0;
+  cursor: pointer;
+}
+
+.sidebar li:hover {
+  color: #d48eb8;
+}
+
+.logout {
+  border: none;
+  background: #b488ab;
+
+  color: white;
+
+  border-radius: 8px;
+
+  padding: 12px;
+  cursor: pointer;
+}
+
+/* CONTEÚDO */
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* MENU */
+
+.top-menu {
+  display: flex;
+  gap: 16px;
+
+  margin-bottom: 20px;
+}
+
+.top-menu button {
+  width: 140px;
+  height: 42px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #b488ab;
+  color: white;
+
+  cursor: pointer;
+}
+
+.top-menu .active {
+  background: #d86bc4;
+}
+
+/* BANNER */
+
+.banner {
+  position: relative;
+
+  background: #6f9caf;
+
+  border-radius: 12px;
+
+  min-height: 500px;
+
+  padding: 40px;
+
+  overflow: hidden;
+}
+
+.banner-text {
+  max-width: 550px;
+  color: white;
+}
+
+.banner-text h1 {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+}
+
+.banner-text p:first-of-type {
+  margin-bottom: 40px;
+}
+
+.banner-text p:last-of-type {
+  line-height: 1.8;
+}
+
+/* MULHER */
+
+.woman {
+  position: absolute;
+
+  right: 20px;
+  top: 20px;
+
+  width: 340px;
+}
+
+/* SETAS */
+
+.arrow-left {
+  position: absolute;
+
+  left: 50px;
+  top: 0;
+
+  width: 110px;
+}
+
+.arrow-right {
+  position: absolute;
+
+  left: 420px;
+  top: 120px;
+
+  width: 110px;
+
+  transform: rotate(180deg);
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 1000px) {
+  .woman {
+    position: static;
+
+    width: 250px;
+    margin-top: 20px;
+  }
+
+  .banner {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .top-menu {
+    flex-wrap: wrap;
+  }
+
+  .top-menu button {
+    flex: 1;
+    min-width: 120px;
+  }
+}
