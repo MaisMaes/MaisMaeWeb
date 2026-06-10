@@ -2,20 +2,66 @@
 
 
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getLoggedUser } from "../../service/api";
+import { FiLogOut } from "react-icons/fi";
+interface UserProfile {
+  id: string;
+  nome: string;
+  email: string;
+  telefone: string;
+  role: string;
+}
 
 export function Sidebar() {
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+  async function loadUser() {
+    try {
+      const data = await getLoggedUser();
+      setUser(data);
+    } catch (error) {
+      console.error(
+        "Erro ao carregar usuário:",
+        error
+      );
+    }
+  }
+
+  loadUser();
+}, []);
+
+
+function handleLogout() {
+  localStorage.removeItem("token");
+
+  navigate("/");
+}
+
+
+
   return (
     <SidebarContainer>
       <div>
         <Logo>+Mães</Logo>
 
         <UserInfo>
-          <div className="avatar" />
+          {/* <div className="avatar" /> */}
+          <UserAvatar>
+          {user?.nome?.charAt(0).toUpperCase()}
+        </UserAvatar>
 
           <div>
-            <h4>Aman Admin</h4>
-            <span>Administrador</span>
+            <h4>{user?.nome ?? "Carregando..."}</h4>
+            <span>
+            {user?.role === "ADMINISTRADOR"
+              ? "Administrador"
+              : user?.role}
+          </span>
           </div>
         </UserInfo>
 
@@ -24,9 +70,9 @@ export function Sidebar() {
             Dashboard
           </MenuItem>
 
-          <MenuItem to="/denuncias">
+          {/* <MenuItem to="/denuncias">
             Denúncias
-          </MenuItem>
+          </MenuItem> */}
 
           <MenuItem to="/publicacoes">
             Publicações
@@ -42,13 +88,53 @@ export function Sidebar() {
         </Menu>
       </div>
 
-      <LogoutButton>
-        Log Out
-      </LogoutButton>
+      <LogoutButton
+      type="button"
+      onClick={handleLogout}
+    >
+      <FiLogOut />
+      Sair
+    </LogoutButton>
     </SidebarContainer>
   );
 }
 
+export const UserAvatar = styled.div`
+  width: 58px;
+  height: 58px;
+
+  border-radius: 50%;
+
+  background: #d764c8;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.4rem;
+  font-weight: 700;
+
+  flex-shrink: 0;
+`;
+
+export const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  margin-bottom: 50px;
+
+  h4 {
+    margin-bottom: 4px;
+    font-size: 1rem;
+  }
+
+  span {
+    color: #cfcfcf;
+    font-size: 0.9rem;
+  }
+`;
 
 export const LogoutButton = styled.button`
   height: 44px;
@@ -66,6 +152,7 @@ export const LogoutButton = styled.button`
   &:hover {
     background: #d764c8;
   }
+
 `;
 
 export const SidebarContainer = styled.aside`
@@ -93,30 +180,30 @@ export const Logo = styled.h1`
   margin-bottom: 50px;
 `;
 
-export const UserInfo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
+// export const UserInfo = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 16px;
 
-  margin-bottom: 50px;
+//   margin-bottom: 50px;
 
-  .avatar {
-    width: 58px;
-    height: 58px;
+//   .avatar {
+//     width: 58px;
+//     height: 58px;
 
-    border-radius: 50%;
-    background: white;
-  }
+//     border-radius: 50%;
+//     background: white;
+//   }
 
-  h4 {
-    margin-bottom: 4px;
-  }
+//   h4 {
+//     margin-bottom: 4px;
+//   }
 
-  span {
-    color: #cfcfcf;
-    font-size: 0.9rem;
-  }
-`;
+//   span {
+//     color: #cfcfcf;
+//     font-size: 0.9rem;
+//   }
+// `;
 
 export const Menu = styled.ul`
   list-style: none;
