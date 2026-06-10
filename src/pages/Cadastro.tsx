@@ -60,6 +60,50 @@ async function handleCadastro(
     return;
   }
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const telefoneRegex = /^\(\d{2}\)\s9\d{4}-\d{4}$/;
+
+  const senhaRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/;
+
+      if (!nome.trim()) {
+      toast.error("Nome é obrigatório.");
+      return;
+    }
+
+    if (!email.trim()) {
+      toast.error("Email é obrigatório.");
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      toast.error("Email inválido.");
+      return;
+    }
+
+    if (!telefoneRegex.test(telefone)) {
+      toast.error("Telefone deve estar no formato: (XX) 9XXXX-XXXX");
+      return;
+    }
+
+    if (!senha.trim()) {
+      toast.error("Senha é obrigatória.");
+      return;
+    }
+
+    if (!senhaRegex.test(senha)) {
+      toast.error(
+        "A senha deve ter no mínimo 8 caracteres, letra maiúscula, letra minúscula, número e caractere especial."
+      );
+      return;
+    }
+
+    if (senha !== confirmarSenha) {
+      toast.error("As senhas não coincidem.");
+      return;
+    }
+
   try {
     setLoading(true);
 
