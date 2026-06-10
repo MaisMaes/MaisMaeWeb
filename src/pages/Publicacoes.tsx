@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import { DashboardLayout } from "../components/DashboardLayout";
 import { NewsCard } from "../components/NewsCard";
 import styled from "styled-components";
-import { getNews, updateNews, updateNewsHighlight } from "../../service/api";
+import { createNews, deleteNews, getNews, updateNews, updateNewsHighlight } from "../../service/api";
 import { EditNewsModal } from "../components/EdiitNewsModal";
+import { DeleteNewsModal } from "../components/DeleteNewsModal";
+import { CriarButton } from "../components/CriarButton";
+import { CreateNewsModal } from "../components/CreateNews";
+import { toast } from "react-toastify";
 
 
 export interface News {
@@ -34,6 +38,10 @@ export function Publicacoes() {
   const [loading, setLoading] = useState(true);
   const [selectedNews, setSelectedNews] = useState<News | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedDeleteNews, setSelectedDeleteNews] = useState<News | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   function handleOpenEdit(item: News) {
   setSelectedNews(item);
@@ -101,33 +109,98 @@ async function handleToggleDestaque(item: News) {
   }
 }
 
+async function handleDeleteNews(item: News) {
+  const confirmed = window.confirm(
+    `Deseja realmente excluir a notícia "${item.titulo}"?`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    await deleteNews(item.id);
+
+    setNews((prev) =>
+      prev.filter((newsItem) => newsItem.id !== item.id)
+    );
+
+    alert("Notícia excluída com sucesso!");
+  } catch (error) {
+    console.error("Erro ao excluir notícia:", error);
+    alert("Erro ao excluir notícia.");
+  }
+}
+
+function handleOpenDelete(item: News) {
+  setSelectedDeleteNews(item);
+  setIsDeleteModalOpen(true);
+}
+
+function handleCloseDelete() {
+  setSelectedDeleteNews(null);
+  setIsDeleteModalOpen(false);
+}
+
+async function handleConfirmDelete() {
+  if (!selectedDeleteNews) return;
+
+  try {
+    await deleteNews(selectedDeleteNews.id);
+
+    setNews((prev) =>
+      prev.filter((item) => item.id !== selectedDeleteNews.id)
+    );
+
+    handleCloseDelete();
+  } catch (error) {
+    console.error("Erro ao excluir notícia:", error);
+    alert("Erro ao excluir notícia.");
+  }
+}
+
+function handleOpenCreate() {
+  setIsCreateModalOpen(true);
+}
+
+function handleCloseCreate() {
+  setIsCreateModalOpen(false);
+}
+
+async function handleCreateNews(data: {
+  titulo: string;
+  descricao: string;
+  imagem: string;
+  link: string;
+}) {
+  try {
+    const created = await createNews(data);
+
+    setNews((prev) => [created, ...prev]);
+
+    handleCloseCreate();
+    toast.success("Informarção criada!");
+    // setSuccessMessage("Publicação criada com sucesso!");
+  } catch (error) {
+    console.error("Erro ao criar publicação:", error);
+    toast.error("Erro ao criar!");
+  }
+}
 
 
   return (
     <DashboardLayout>
+      <CriarButton onClick={handleOpenCreate} />
+      {successMessage && (
+        <SuccessMessage>
+          {successMessage}
+        </SuccessMessage>
+      )}
       <CardsContainer>
         {loading ? (
           <p>Carregando notícias...</p>
         ) : (
           news.map((item) => (
-            // <NewsCard
-            //   key={item.id}
-            //   image={item.imagem}
-            //   title={item.titulo}
-            //   description={item.descricao}
-            //   link={item.link}
-            // />
-            // <NewsCard
-            //   key={item.id}
-            //   id={item.id}
-            //   image={item.imagem}
-            //   title={item.titulo}
-            //   description={item.descricao}
-            //   link={item.link}
-            //   destaque={item.destaque}
-            //   ativo={item.ativo}
-            //   onEdit={() => handleOpenEdit(item)}
-            // />
             <NewsCard
               key={item.id}
               image={item.imagem}
@@ -137,10 +210,24 @@ async function handleToggleDestaque(item: News) {
               destaque={item.destaque}
               onToggleDestaque={() => handleToggleDestaque(item)}
               onEdit={() => handleOpenEdit(item)}
+              onDelete={() => handleOpenDelete(item)}
             />
           ))
         )}
       </CardsContainer>
+      {isCreateModalOpen && (
+        <CreateNewsModal
+          onClose={handleCloseCreate}
+          onSave={handleCreateNews}
+        />
+      )}
+      {isDeleteModalOpen && selectedDeleteNews && (
+        <DeleteNewsModal
+          news={selectedDeleteNews}
+          onClose={handleCloseDelete}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
       {isEditModalOpen && selectedNews && (
       <EditNewsModal
         news={selectedNews}
@@ -153,15 +240,6 @@ async function handleToggleDestaque(item: News) {
 }
 
 
-//0p2
-// export const CardsContainer = styled.div`
-//   display: grid;
-//   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-//   gap: 20px;
-
-//   align-items: stretch;
-// `;
-
 export const CardsContainer = styled.div`
   display: grid;
 
@@ -171,4 +249,22 @@ export const CardsContainer = styled.div`
   );
 
   gap: 20px;
+`;
+
+const SuccessMessage = styled.div`
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 1000;
+
+  background: #5fd36a;
+  color: white;
+
+  padding: 14px 20px;
+  border-radius: 10px;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  box-shadow: 0 8px 24px rgba(95, 211, 106, 0.35);
 `;

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import { FiTrash2 } from "react-icons/fi";
 
 
 
@@ -10,6 +10,7 @@ interface Props {
   link: string;
   destaque: boolean;
   onToggleDestaque: () => void;
+  onDelete: () => void;
   onEdit: () => void;
 }
 
@@ -23,6 +24,7 @@ export function NewsCard({
   destaque,
   onToggleDestaque,
   onEdit,
+  onDelete
 }: Props) {
   return (
     <Card>
@@ -63,13 +65,47 @@ export function NewsCard({
           >
             Editar
           </button>
-          <button>🗑</button>
+          {/* <button>🗑</button> */}
+          <DeleteButton
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+        >
+          <FiTrash2 />
+        </DeleteButton>
+          
         </Actions>
       </CardBody>
     </Card>
   );
 }
 
+export const DeleteButton = styled.button`
+  border: none;
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.1rem;
+  color: #d9534f;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #c9302c;
+    transform: scale(1.15);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
 
 const SwitchContainer = styled.button<{ $active: boolean }>`
   position: absolute;

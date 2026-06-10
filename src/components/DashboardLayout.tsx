@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
-import { TopMenu } from "./TopMenu";
+// import { TopMenu } from "./TopMenu";
 import styled from "styled-components";
+
 
 interface Props {
   children: ReactNode;
@@ -15,7 +16,8 @@ export function DashboardLayout({
       <Sidebar />
 
       <MainContent>
-        <TopMenu />
+        {/* <TopMenu /> */}
+        {/* <CriarButton/> */}
 
         {children}
       </MainContent>

@@ -3,9 +3,6 @@
 
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-// interface MenuItemProps {
-//   $active?: boolean;
-// }
 
 export function Sidebar() {
   return (

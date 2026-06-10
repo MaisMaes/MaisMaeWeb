@@ -53,3 +53,33 @@ export async function updateNewsHighlight(news: News) {
 
   return response.data;
 }
+
+export async function deleteNews(id: string) {
+  await api.delete(`/infocards/${id}`);
+}
+
+export async function createNews(data: {
+  titulo: string;
+  descricao: string;
+  imagem: string;
+  link: string;
+}) {
+  const response = await api.post("/infocards", data);
+  return response.data;
+}
+
+
+export async function getLoggedUser() {
+  const response = await api.get("/usuario/me");
+  return response.data;
+}
+
+export async function updateUserProfile(data: {
+  nome: string;
+  telefone: string;
+  senha?: string;
+  email: string;
+}) {
+  const response = await api.patch("/usuario/atualizar", data);
+  return response.data;
+}
