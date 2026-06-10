@@ -2,17 +2,6 @@ import { FiPlus } from "react-icons/fi";
 import styled from "styled-components";
 
 
-// export function CriarButton() {
-//   return (
-//     <Container>
-//       <Button>
-//         <FiPlus />
-//         <span>Criar publicação</span>
-//       </Button>
-//     </Container>
-//   );
-// }
-
 interface Props {
   onClick: () => void;
 }

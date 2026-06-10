@@ -55,7 +55,7 @@ export function NewsCard({
         </a>
 
         <Actions>
-          {/* <button onClick={() => onEdit(id)}>Editar</button> */}
+          
           <button
             type="button"
             onClick={(e) => {
@@ -65,7 +65,7 @@ export function NewsCard({
           >
             Editar
           </button>
-          {/* <button>🗑</button> */}
+          
           <DeleteButton
           type="button"
           onClick={(e) => {

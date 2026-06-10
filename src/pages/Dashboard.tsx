@@ -24,18 +24,17 @@ export function Dashboard() {
 
         <BannerText>
           <h1>
-            Principal Publicação no APP
+            Seja bem-vindo(a)! Esse é seu portal de administração.
           </h1>
 
-          <p>Texto texto texto</p>
-
           <p>
-            is simply dummy text of the
-            printing and typesetting
-            industry. Lorem Ipsum has been
-            the industry's standard dummy
-            text ever since the 1500s...
+            Gerencie conteúdos, grupos temáticos e informações  da plataforma de forma rápida e segura.
           </p>
+
+        
+          <p>
+          Utilize este painel para acompanhar as principais funcionalidades do sistema, manter as informações atualizadas e garantir uma melhor experiência para todas as usuárias da comunidade +Mães.
+        </p>
         </BannerText>
 
         <WomanImage
@@ -117,80 +116,3 @@ export const ArrowRight = styled.img`
 
   opacity: 0.8;
 `;
-
-// export function Dashboard() {
-//   return (
-//     <div className="dashboard">
-//       <aside className="sidebar">
-//         <div>
-//           <h1 className="logo">+Mães</h1>
-
-//           <div className="user">
-//             <div className="avatar">👩</div>
-
-//             <div>
-//               <h4>Aman Admin</h4>
-//               <span>Admin</span>
-//             </div>
-//           </div>
-
-//           <nav>
-//             <ul>
-//               <li>Dashboard</li>
-//               <li>Denúncias</li>
-//               <li>Publicações</li>
-//               <li>Grupos</li>
-//               <li>Perfil</li>
-//             </ul>
-//           </nav>
-//         </div>
-
-//         <button className="logout">
-//           Log Out
-//         </button>
-//       </aside>
-
-//       <main className="content">
-//         <header className="top-menu">
-//           <button className="active">Home</button>
-//           <button>Denúncias</button>
-//           <button>Publicações</button>
-//           <button>Perfil</button>
-//         </header>
-
-//         <section className="banner">
-//           <img
-//             src={arow}
-//             alt=""
-//             className="arrow-left"
-//           />
-
-//           <img
-//             src={arow}
-//             alt=""
-//             className="arrow-right"
-//           />
-
-//           <div className="banner-text">
-//             <h1>Principal Publicação no APP</h1>
-
-//             <p>Texto texto texto</p>
-
-//             <p>
-//               is simply dummy text of the printing and
-//               typesetting industry. Lorem Ipsum has
-//               been the industry's standard dummy text
-//               ever since the 1500s...
-//             </p>
-//           </div>
-
-//           <img
-//             src={mulher}
-//             alt="Mulher"
-//             className="woman"
-//           />
-//         </section>
-//       </main>
-//     </div>
-//   );
-// }

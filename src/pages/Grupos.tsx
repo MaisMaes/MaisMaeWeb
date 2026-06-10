@@ -1,11 +1,3 @@
-
-
-// export function Grupos(){
-//   return <>
-//   <h1>Grupos</h1>
-//   </>
-// }
-
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FiTrash2, FiUsers, FiLock, FiUnlock } from "react-icons/fi";

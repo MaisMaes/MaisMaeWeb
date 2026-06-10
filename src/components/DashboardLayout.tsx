@@ -16,9 +16,6 @@ export function DashboardLayout({
       <Sidebar />
 
       <MainContent>
-        {/* <TopMenu /> */}
-        {/* <CriarButton/> */}
-
         {children}
       </MainContent>
     </Container>

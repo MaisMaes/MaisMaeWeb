@@ -61,18 +61,6 @@ function handleSubmit() {
   });
 }
 
-  // function handleSubmit() {
-  //   if (senha && senha !== confirmarSenha) {
-  //     return alert("As senhas não coincidem.");
-  //   }
-
-  //   onSave({
-  //     nome,
-  //     email,
-  //     telefone,
-  //     senha: senha || undefined,
-  //   });
-  // }
 
   return (
     <Overlay>
@@ -114,15 +102,7 @@ function handleSubmit() {
         </Field>
 
         <Field>
-          {/* <label>Nova senha</label>
-
-          <input
-            type="password"
-            value={senha}
-            onChange={(e) =>
-              setSenha(e.target.value)
-            }
-          /> */}
+        
            <PasswordWrapper>
               <input
                 type={showPassword ? "text" : "password"}
@@ -146,13 +126,6 @@ function handleSubmit() {
         <Field>
           <label>Confirmar senha</label>
 
-          {/* <input
-            type="password"
-            value={confirmarSenha}
-            onChange={(e) =>
-              setConfirmarSenha(e.target.value)
-            }
-          /> */}
           <PasswordWrapper>
               <input
                 type={showConfirmPassword ? "text" : "password"}

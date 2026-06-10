@@ -180,7 +180,6 @@ async function handleCreateNews(data: {
 
     handleCloseCreate();
     toast.success("Informarção criada!");
-    // setSuccessMessage("Publicação criada com sucesso!");
   } catch (error) {
     console.error("Erro ao criar publicação:", error);
     toast.error("Erro ao criar!");

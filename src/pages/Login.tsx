@@ -1,12 +1,11 @@
 
 
 import { Link, useNavigate } from "react-router-dom";
-
 import { api } from "../../service/api";
 import { toast } from "react-toastify";
 import imagemFundo from "../assets/imagem-fundo-login.png";
 
-// import "./Login.css";
+
 import { useState } from "react";
 import styled from "styled-components";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -26,6 +25,22 @@ export function Login() {
      event: React.SyntheticEvent
   ) {
     event.preventDefault();
+
+    if (!email.trim() && !senha.trim()) {
+      toast.error("Preencha email e senha.");
+      return;
+    }
+
+    if (!email.trim()) {
+      toast.error("Informe seu email.");
+      return;
+    }
+
+
+    if (!senha.trim()) {
+      toast.error("Informe sua senha.");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -47,14 +62,16 @@ export function Login() {
       toast.success("Login realizado com sucesso!");
       navigate("/dashboard");
     } catch (error) {
-       if (axios.isAxiosError(error)) {
-          const mensagem =
+      
+      if (axios.isAxiosError(error)) {
+        const mensagem =
+          error.response?.data?.error ||
           error.response?.data?.mensagem ||
           error.response?.data?.message ||
           "Erro ao realizar login.";
 
         toast.error(mensagem);
-        }
+      }
 
     } finally {
       setLoading(false);
@@ -88,30 +105,25 @@ export function Login() {
               />
             </InputGroup>
 
-            <label>Senha:</label>
+            <InputGroup>
+            <label>Senha</label>
+
             <InputContainer>
               <Input
                 type={mostrarSenha ? "text" : "password"}
                 value={senha}
-                onChange={(e) =>
-                  setSenha(e.target.value)
-                }
+                onChange={(e) => setSenha(e.target.value)}
                 placeholder="••••••••••••"
               />
 
               <TogglePassword
                 type="button"
-                onClick={() =>
-                  setMostrarSenha(!mostrarSenha)
-                }
+                onClick={() => setMostrarSenha(!mostrarSenha)}
               >
-                {mostrarSenha ? (
-                  <FiEyeOff />
-                ) : (
-                  <FiEye />
-                )}
+                {mostrarSenha ? <FiEyeOff /> : <FiEye />}
               </TogglePassword>
             </InputContainer>
+          </InputGroup>
 
             <LoginButton
               type="submit"
@@ -149,15 +161,58 @@ export function Login() {
     
   );
 }
-
-
 export const Container = styled.div`
   width: 100%;
   min-height: 100vh;
 
   display: flex;
+
   background: linear-gradient(135deg, #d764c8, #65d3d4);
-  // background: #eec6db;
+`;
+
+export const LoginButton = styled.button`
+  width: 100%;
+  height: 46px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #d764c8, #65d3d4);
+  color: white;
+
+  margin-top: 8px;
+
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(215, 100, 200, 0.28);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+`;
+
+export const Content = styled.div`
+  width: 100%;
+  max-width: 390px;
+
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+
+  padding: 38px 36px;
+  border-radius: 22px;
+
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
 `;
 
 export const LeftSide = styled.div`
@@ -171,44 +226,36 @@ export const LeftSide = styled.div`
 
   @media (max-width: 900px) {
     flex: none;
+    width: 100%;
     min-height: 100vh;
   }
 `;
 
-export const Content = styled.div`
-  width: 100%;
-  max-width: 350px;
-`;
 
 export const Logo = styled.h1`
-  color: #fa7ec0;
-
-  font-size: 2.2rem;
-  font-weight: 700;
-
-  margin-bottom: 12px;
+  color: #d764c8;
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 18px;
 `;
 
 export const Welcome = styled.span`
   display: block;
 
-  color: #2b2b2b;
-  font-size: 0.85rem;
+  color: #777;
+  font-size: 0.9rem;
+  font-weight: 500;
 
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 `;
 
 export const Title = styled.h2`
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 800;
 
-  color: #fefefe;
+  color: #2f2f2f;
 
-  margin-bottom: 32px;
-
-  @media (max-width: 900px) {
-    font-size: 2.4rem;
-  }
+  margin-bottom: 28px;
 `;
 
 export const Form = styled.form`
@@ -230,33 +277,33 @@ export const InputGroup = styled.div`
   }
 `;
 
-
-export const LoginButton = styled.button`
-  width: 120px;
-  height: 38px;
+export const RegisterLink = styled.button`
+  margin-left: 5px;
 
   border: none;
-  border-radius: 30px;
+  background: transparent;
 
-  background: #d88ab3;
-  color: white;
-
-  margin-top: 10px;
-
-  font-weight: 600;
+  color: #d764c8;
+  font-weight: 700;
 
   cursor: pointer;
 
-  transition: 0.3s;
+  font-size: 0.9rem;
 
   &:hover {
-    opacity: 0.9;
+    text-decoration: underline;
   }
+`;
 
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
+
+
+export const RegisterText = styled.p`
+  margin-top: 22px;
+
+  text-align: center;
+
+  color: #666;
+  font-size: 0.9rem;
 `;
 
 export const RightSide = styled.div`
@@ -330,78 +377,3 @@ export const BackgroundImage = styled.img`
   }
 `;
 
-export const RegisterText = styled.p`
-  margin-top: 24px;
-
-  text-align: center;
-
-  color: #666;
-  font-size: 0.9rem;
-`;
-
-export const RegisterLink = styled.button`
-  margin-left: 4px;
-
-  border: none;
-  background: transparent;
-
-  color: #f73b9f;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  font-size: 0.9rem;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-
-// import "./Login.css";
-// import imagemFundo from "../assets/imagem-fundo-login.png";
-
-// export function Login() {
-//   return (
-//     <div className="login-container">
-//       <div className="login-left">
-//         <div className="login-content">
-//           <h1 className="logo">+Mães</h1>
-
-//           <span className="welcome">Bem-vindo(a)!</span>
-
-//           <h2 className="title">LOGIN</h2>
-
-//           <form className="login-form">
-//             <div className="input-group">
-//               <label>Email:</label>
-//               <input
-//                 type="email"
-//                 placeholder="seuemail@gmail.com"
-//               />
-//             </div>
-
-//             <div className="input-group">
-//               <label>Senha:</label>
-//               <input
-//                 type="password"
-//                 placeholder="••••••••••••"
-//               />
-//             </div>
-
-//             <button type="submit">
-//               LOGIN →
-//             </button>
-//           </form>
-//         </div>
-//       </div>
-
-//       <div className="login-right">
-//         <img
-//           src={imagemFundo}
-//           alt="Imagem de Login"
-//         />
-//       </div>
-//     </div>
-//   );
-// }

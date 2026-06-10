@@ -50,7 +50,7 @@ function handleLogout() {
         <Logo>+Mães</Logo>
 
         <UserInfo>
-          {/* <div className="avatar" /> */}
+         
           <UserAvatar>
           {user?.nome?.charAt(0).toUpperCase()}
         </UserAvatar>
@@ -67,7 +67,7 @@ function handleLogout() {
 
         <Menu>
           <MenuItem to="/dashboard">
-            Dashboard
+            Home
           </MenuItem>
 
           {/* <MenuItem to="/denuncias">
@@ -179,31 +179,6 @@ export const Logo = styled.h1`
   font-size: 2.2rem;
   margin-bottom: 50px;
 `;
-
-// export const UserInfo = styled.div`
-//   display: flex;
-//   align-items: center;
-//   gap: 16px;
-
-//   margin-bottom: 50px;
-
-//   .avatar {
-//     width: 58px;
-//     height: 58px;
-
-//     border-radius: 50%;
-//     background: white;
-//   }
-
-//   h4 {
-//     margin-bottom: 4px;
-//   }
-
-//   span {
-//     color: #cfcfcf;
-//     font-size: 0.9rem;
-//   }
-// `;
 
 export const Menu = styled.ul`
   list-style: none;
