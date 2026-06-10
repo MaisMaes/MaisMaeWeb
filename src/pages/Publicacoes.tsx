@@ -1,158 +1,156 @@
+import { useEffect, useState } from "react";
 import { DashboardLayout } from "../components/DashboardLayout";
 import { NewsCard } from "../components/NewsCard";
-import imagem from '../assets/imagem-mulher.png'
 import styled from "styled-components";
+import { getNews, updateNews } from "../../service/api";
+import { EditNewsModal } from "../components/EdiitNewsModal";
+
+
+export interface News {
+  id: string;
+  titulo: string;
+  descricao: string;
+  imagem: string;
+  link: string;
+  destaque: boolean;
+  ativo: boolean;
+  dataCriacao: string;
+  dataAtualizacao: string;
+}
+
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
+
+
 
 export function Publicacoes() {
+  const [news, setNews] = useState<News[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedNews, setSelectedNews] = useState<News | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  function handleOpenEdit(item: News) {
+  setSelectedNews(item);
+  setIsEditModalOpen(true);
+}
+
+function handleCloseEdit() {
+  setSelectedNews(null);
+  setIsEditModalOpen(false);
+}
+
+
+  useEffect(() => {
+    async function loadNews() {
+      try {
+        const data: PageResponse<News> = await getNews();
+
+        setNews(data.content); 
+      } catch (err) {
+        console.error("Erro ao buscar notícias:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadNews();
+  }, []);
+
+  
+ async function handleUpdateNews(data: News) {
+  try {
+    const updated = await updateNews(data.id, {
+      titulo: data.titulo,
+      descricao: data.descricao,
+      imagem: data.imagem,
+      link: data.link,
+      destaque: data.destaque,
+      ativo: data.ativo,
+    });
+
+    setNews((prev) =>
+      prev.map((item) => (item.id === data.id ? updated : item))
+    );
+
+    handleCloseEdit();
+  } catch (error) {
+    console.error("Erro ao editar notícia:", error);
+    alert("Erro ao editar notícia.");
+  }
+}
+
+
+
   return (
     <DashboardLayout>
       <CardsContainer>
-        <NewsCard
-          image={imagem}
-          title="Título notícia"
-        />
-
-        <NewsCard
-          image={imagem}
-          title="Título notícia"
-        />
-
-        <NewsCard
-          image={imagem}
-          title="Título notícia"
-        />
+        {loading ? (
+          <p>Carregando notícias...</p>
+        ) : (
+          news.map((item) => (
+            // <NewsCard
+            //   key={item.id}
+            //   image={item.imagem}
+            //   title={item.titulo}
+            //   description={item.descricao}
+            //   link={item.link}
+            // />
+            // <NewsCard
+            //   key={item.id}
+            //   id={item.id}
+            //   image={item.imagem}
+            //   title={item.titulo}
+            //   description={item.descricao}
+            //   link={item.link}
+            //   destaque={item.destaque}
+            //   ativo={item.ativo}
+            //   onEdit={() => handleOpenEdit(item)}
+            // />
+            <NewsCard
+              key={item.id}
+              image={item.imagem}
+              title={item.titulo}
+              description={item.descricao}
+              link={item.link}
+              onEdit={() => handleOpenEdit(item)}
+            />
+          ))
+        )}
       </CardsContainer>
-    
+      {isEditModalOpen && selectedNews && (
+      <EditNewsModal
+        news={selectedNews}
+        onClose={handleCloseEdit}
+        onSave={handleUpdateNews}
+      />
+    )}
     </DashboardLayout>
   );
 }
 
 
+//0p2
+// export const CardsContainer = styled.div`
+//   display: grid;
+//   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+//   gap: 20px;
+
+//   align-items: stretch;
+// `;
+
 export const CardsContainer = styled.div`
   display: grid;
+
   grid-template-columns: repeat(
     auto-fit,
-    minmax(320px, 1fr)
+    minmax(280px, 1fr)
   );
 
   gap: 20px;
 `;
-
-// import "./Publicacoes.css";
-
-// const noticias = [1, 2, 3];
-
-// export function Publicacoes() {
-//   return (
-//     <div className="dashboard">
-//       {/* Sidebar */}
-//       <aside className="sidebar">
-//         <div>
-//           <h1 className="logo">+Mães</h1>
-
-//           <div className="user">
-//             <div className="avatar">👩</div>
-
-//             <div>
-//               <h4>Aman Admin</h4>
-//               <span>Admin</span>
-//             </div>
-//           </div>
-
-//           <nav>
-//             <ul>
-//               <li>Dashboard</li>
-//               <li>Denúncias</li>
-//               <li className="active-menu">Publicações</li>
-//               <li>Grupos</li>
-//               <li>Perfil</li>
-//             </ul>
-//           </nav>
-//         </div>
-
-//         <button className="logout">
-//           Log Out
-//         </button>
-//       </aside>
-
-//       {/* Conteúdo */}
-//       <main className="content">
-//         <header className="top-menu">
-//           <button>Home</button>
-//           <button>Denúncias</button>
-//           <button className="active">
-//             Publicações
-//           </button>
-//           <button>Perfil</button>
-//         </header>
-
-//         <section className="publicacoes-box">
-//           <div className="toolbar">
-//             <button className="filtro-btn">
-//               Filtros
-//             </button>
-
-//             <input
-//               type="text"
-//               placeholder="Pesquise..."
-//             />
-
-//             <button className="novo-btn">
-//               Nova +
-//             </button>
-//           </div>
-
-//           <div className="cards">
-//             {noticias.map((item) => (
-//               <article
-//                 className="card"
-//                 key={item}
-//               >
-//                 <img
-//                   src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?w=800"
-//                   alt=""
-//                 />
-
-//                 <div className="card-body">
-//                   <h2>Título notícia</h2>
-
-//                   <div className="info">
-//                     <span>15 Mar</span>
-//                     <span>2 Views</span>
-//                     <span>2 Likes</span>
-//                   </div>
-
-//                   <p>
-//                     Lorem ipsum dolor sit amet,
-//                     consectetur adipiscing elit.
-//                     Curabitur tincidunt...
-//                   </p>
-
-//                   <div className="actions">
-//                     <button className="editar">
-//                       Editar
-//                     </button>
-
-//                     <button className="delete">
-//                       🗑
-//                     </button>
-//                   </div>
-//                 </div>
-//               </article>
-//             ))}
-//           </div>
-
-//           <div className="pagination">
-//             <button>{"<"}</button>
-//             <button className="page-active">
-//               1
-//             </button>
-//             <button>2</button>
-//             <button>3</button>
-//             <button>{">"}</button>
-//           </div>
-//         </section>
-//       </main>
-//     </div>
-//   );
-// }
