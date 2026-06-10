@@ -83,3 +83,16 @@ export async function updateUserProfile(data: {
   const response = await api.patch("/usuario/atualizar", data);
   return response.data;
 }
+
+export async function getGroups() {
+  const response = await api.get("/grupo-tematico/listar");
+  return response.data;
+}
+
+// export async function deleteGroup(id: number) {
+//   await api.delete(`/grupo-tematico/${id}`);
+// }
+
+export async function deleteGroup(id: number) {
+  await api.delete(`/grupo-tematico/excluir/${id}`);
+}
