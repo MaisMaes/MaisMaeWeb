@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DashboardLayout } from "../components/DashboardLayout";
 import { NewsCard } from "../components/NewsCard";
 import styled from "styled-components";
-import { getNews, updateNews } from "../../service/api";
+import { getNews, updateNews, updateNewsHighlight } from "../../service/api";
 import { EditNewsModal } from "../components/EdiitNewsModal";
 
 
@@ -86,6 +86,22 @@ function handleCloseEdit() {
 }
 
 
+async function handleToggleDestaque(item: News) {
+  try {
+    const updated = await updateNewsHighlight(item);
+
+    setNews((prev) =>
+      prev.map((newsItem) =>
+        newsItem.id === item.id ? updated : newsItem
+      )
+    );
+  } catch (error) {
+    console.error("Erro ao alterar destaque:", error);
+    alert("Erro ao alterar destaque.");
+  }
+}
+
+
 
   return (
     <DashboardLayout>
@@ -118,6 +134,8 @@ function handleCloseEdit() {
               title={item.titulo}
               description={item.descricao}
               link={item.link}
+              destaque={item.destaque}
+              onToggleDestaque={() => handleToggleDestaque(item)}
               onEdit={() => handleOpenEdit(item)}
             />
           ))

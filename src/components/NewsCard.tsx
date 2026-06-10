@@ -1,29 +1,15 @@
 import styled from "styled-components";
 
 
-// interface Props {
-//   image: string;
-//   title: string;
-//   description: string;
-//   link: string;
-// }
 
-// interface Props {
-//   id: string;
-//   image: string;
-//   title: string;
-//   description: string;
-//   link: string;
-//   destaque: boolean;
-//   ativo: boolean;
-//   onEdit: (id: string) => void;
-// }
 
 interface Props {
   image: string;
   title: string;
   description: string;
   link: string;
+  destaque: boolean;
+  onToggleDestaque: () => void;
   onEdit: () => void;
 }
 
@@ -34,10 +20,27 @@ export function NewsCard({
   title,
   description,
   link,
+  destaque,
+  onToggleDestaque,
   onEdit,
 }: Props) {
   return (
     <Card>
+
+
+        <SwitchContainer
+  $active={destaque}
+  onClick={(e) => {
+    e.stopPropagation();
+    onToggleDestaque();
+  }}
+>
+  <span>Destaque</span>
+
+  <div className="track">
+    <div className="thumb" />
+  </div>
+</SwitchContainer>
       <CardImage src={image} />
 
       <CardBody>
@@ -67,36 +70,61 @@ export function NewsCard({
   );
 }
 
-// export function NewsCard({
-//   image,
-//   title,
-//   description,
-//   link,
-// }: Props) {
-//   return (
-//     <Card>
-//       <CardImage src={image} />
 
-//       <CardBody>
-//         <h2>{title}</h2>
+const SwitchContainer = styled.button<{ $active: boolean }>`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
 
-//         <p>{description}</p>
+  border: none;
+  background: white;
 
-//         <a href={link} target="_blank" rel="noreferrer">
-//           Acessar notícia
-//         </a>
+  border-radius: 20px;
+  padding: 6px 10px;
 
-//         <Actions>
-//           <button>Editar</button>
-//           <button>🗑</button>
-//         </Actions>
-//       </CardBody>
-//     </Card>
-//   );
-// }
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
+  cursor: pointer;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.04);
+  }
+
+  span {
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .track {
+    width: 34px;
+    height: 18px;
+    border-radius: 20px;
+    background: ${({ $active }) => ($active ? "#5FD36A" : "#D9D9D9")};
+    position: relative;
+  }
+
+  .thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: white;
+    position: absolute;
+    top: 2px;
+    left: ${({ $active }) => ($active ? "18px" : "2px")};
+    transition: 0.2s;
+  }
+`;
 
 export const Card = styled.article`
+  position: relative;
+
   background: #ffffff;
   border-radius: 8px;
   overflow: hidden;
@@ -126,20 +154,6 @@ export const Card = styled.article`
     transform: scale(1.05);
   }
 `;
-
-// export const CardImage = styled.img`
-//   width: 100%;
-//   height: 170px;
-//   object-fit: cover;
-// `;
-
-// export const CardImage = styled.img`
-//   width: 100%;
-//   height: 170px;
-//   object-fit: cover;
-
-//   transition: transform 0.3s ease;
-// `;
 
 
 export const CardImage = styled.img`

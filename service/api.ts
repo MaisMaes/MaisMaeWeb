@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { News } from "../src/pages/Publicacoes";
 //endpoint para login 
 export const api = axios.create({
   baseURL: "http://localhost:8080",
@@ -30,3 +31,25 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
+
+
+// export async function updateNewsHighlight(id: string, destaque: boolean) {
+//   const response = await api.patch(`/infocards/${id}`, {
+//     destaque,
+//   });
+
+//   return response.data;
+// }
+
+export async function updateNewsHighlight(news: News) {
+  const response = await api.put(`/infocards/${news.id}`, {
+    titulo: news.titulo,
+    descricao: news.descricao,
+    imagem: news.imagem,
+    link: news.link,
+    destaque: !news.destaque,
+    ativo: news.ativo,
+  });
+
+  return response.data;
+}
