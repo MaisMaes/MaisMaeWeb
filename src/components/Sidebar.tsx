@@ -70,9 +70,9 @@ function handleLogout() {
             Home
           </MenuItem>
 
-          {/* <MenuItem to="/denuncias">
+          <MenuItem to="/denuncias">
             Denúncias
-          </MenuItem> */}
+          </MenuItem>
 
           <MenuItem to="/publicacoes">
             Publicações
@@ -155,9 +155,33 @@ export const LogoutButton = styled.button`
 
 `;
 
+// export const SidebarContainer = styled.aside`
+//   width: 280px;
+//   min-width: 280px;
+
+//   background: linear-gradient(
+//     180deg,
+//     #2f2f2f 0%,
+//     #252525 100%
+//   );
+
+//   color: white;
+
+//   padding: 24px;
+
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-between;
+// `;
+
 export const SidebarContainer = styled.aside`
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
   width: 280px;
-  min-width: 280px;
+  height: 100vh;
 
   background: linear-gradient(
     180deg,
