@@ -29,5 +29,9 @@ const Container = styled.div`
 
  const MainContent = styled.main`
   flex: 1;
+    margin-left: 280px;
+
   padding: 20px;
+
+  min-height: 100vh;
 `;

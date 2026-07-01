@@ -89,10 +89,92 @@ export async function getGroups() {
   return response.data;
 }
 
+// export async function buscarGrupos(){
+
+//     const response = await api.get(
+//         "/grupo-tematico/listar"
+//     );
+
+//     return response.data;
+
+// }
+
 // export async function deleteGroup(id: number) {
 //   await api.delete(`/grupo-tematico/${id}`);
 // }
 
 export async function deleteGroup(id: number) {
   await api.delete(`/grupo-tematico/excluir/${id}`);
+}
+
+
+// export async function buscarDenuncias() {
+
+//     const response = await api.get("/grupo-tematico",{
+
+//         params:{
+//             status:"",
+//             grupoId:0,
+//             usuarioId:"",
+//             pagina:0,
+//             tamanho:10
+//         }
+
+//     });
+
+//     return response.data;
+
+// }
+
+
+
+export async function buscarDenuncias(
+    grupoId: number,
+    status: string,
+    pagina: number,
+    tamanho: number
+) {
+
+    const response = await api.get("/grupo-tematico", {
+        // params: {
+        //     grupoId,
+        //     status,
+        //     usuarioId: "",
+        //     pagina: 0,
+        //     tamanho: 10
+        // }
+        params: {
+          grupoId,
+          status,
+          usuarioId: "",
+          pagina,
+          tamanho
+      }
+    });
+
+    return response.data;
+}
+
+export async function atualizarDenuncia(
+
+    id:number,
+
+    denuncia:{
+        status:string;
+        descricao:string;
+        verdadeira:string;
+    }
+
+){
+
+    const response = await api.patch(
+
+        `/grupo-tematico/${id}`,
+
+        denuncia
+
+    );
+
+    return response.data;
+
 }
