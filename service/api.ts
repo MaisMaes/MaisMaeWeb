@@ -3,7 +3,7 @@ import type { News } from "../src/pages/Publicacoes";
 
 //endpoint para login 
 export const api = axios.create({
-  baseURL: (import.meta as any).env.VITE_API_URL || "http://localhost:8080",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 export async function getNews(page = 0, size = 10) {
