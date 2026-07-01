@@ -134,18 +134,7 @@ export function Login() {
                 : "LOGIN →"}
             </LoginButton>
 
-            <RegisterText>
-              Não tem conta?
-
-              <RegisterLink
-                type="button"
-                onClick={() =>
-                  navigate("/cadastro")
-                }
-              >
-                Cadastre-se
-              </RegisterLink>
-</RegisterText>
+            
             
           </Form>
         </Content>
