@@ -20,27 +20,27 @@ export function Sidebar() {
 
 
   useEffect(() => {
-  async function loadUser() {
-    try {
-      const data = await getLoggedUser();
-      setUser(data);
-    } catch (error) {
-      console.error(
-        "Erro ao carregar usuário:",
-        error
-      );
+    async function loadUser() {
+      try {
+        const data = await getLoggedUser();
+        setUser(data);
+      } catch (error) {
+        console.error(
+          "Erro ao carregar usuário:",
+          error
+        );
+      }
     }
+
+    loadUser();
+  }, []);
+
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+
+    navigate("/");
   }
-
-  loadUser();
-}, []);
-
-
-function handleLogout() {
-  localStorage.removeItem("token");
-
-  navigate("/");
-}
 
 
 
@@ -50,18 +50,18 @@ function handleLogout() {
         <Logo>+Mães</Logo>
 
         <UserInfo>
-         
+
           <UserAvatar>
-          {user?.nome?.charAt(0).toUpperCase()}
-        </UserAvatar>
+            {user?.nome?.charAt(0).toUpperCase()}
+          </UserAvatar>
 
           <div>
             <h4>{user?.nome ?? "Carregando..."}</h4>
             <span>
-            {user?.role === "ADMINISTRADOR"
-              ? "Administrador"
-              : user?.role}
-          </span>
+              {user?.role === "ADMINISTRADOR"
+                ? "Administrador"
+                : user?.role}
+            </span>
           </div>
         </UserInfo>
 
@@ -85,16 +85,20 @@ function handleLogout() {
           <MenuItem to="/perfil">
             Perfil
           </MenuItem>
+
+          <MenuItem to="/contas">
+           Gerenciar  Acessos
+          </MenuItem>
         </Menu>
       </div>
 
       <LogoutButton
-      type="button"
-      onClick={handleLogout}
-    >
-      <FiLogOut />
-      Sair
-    </LogoutButton>
+        type="button"
+        onClick={handleLogout}
+      >
+        <FiLogOut />
+        Sair
+      </LogoutButton>
     </SidebarContainer>
   );
 }

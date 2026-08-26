@@ -2,9 +2,37 @@ import axios from "axios";
 import type { News } from "../src/pages/Publicacoes";
 
 //endpoint para login 
+// export const api = axios.create({
+//   baseURL: "https://maismaes-api-hda7beaud2frbvfz.canadacentral-01.azurewebsites.net",
+// });
+
 export const api = axios.create({
-  baseURL: "https://maismaes-api-hda7beaud2frbvfz.canadacentral-01.azurewebsites.net",
+  baseURL: "http://localhost:8080",
 });
+
+export async function getContas() {
+  const response = await api.get("/usuario/contas");
+
+  return response.data;
+}
+
+export async function changeAccountStatus(
+  userId: string,
+  novoStatus: string
+) {
+  const response = await api.patch(
+    "/usuario/status-conta",
+    null,
+    {
+      params: {
+        userId,
+        novoStatus,
+      },
+    }
+  );
+
+  return response.data;
+}
 
 export async function getNews(page = 0, size = 10) {
   const response = await api.get(`/infocards?pagina=${page}&tamanho=${size}`);

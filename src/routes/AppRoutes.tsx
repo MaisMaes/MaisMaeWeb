@@ -7,6 +7,7 @@ import { Grupos } from "../pages/Grupos";
 import { Perfil } from "../pages/Perfil";
 import { Login } from "../pages/Login";
 import { Cadastro } from "../pages/Cadastro";
+import { Contas } from "../pages/Contas";
 
 export function AppRoutes() {
   return (
@@ -44,6 +45,11 @@ export function AppRoutes() {
         <Route
           path="/perfil"
           element={<Perfil />}
+        />
+
+        <Route
+          path="/contas"
+          element={<Contas/>}
         />
       </Routes>
     </BrowserRouter>
