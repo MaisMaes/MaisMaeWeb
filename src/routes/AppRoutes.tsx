@@ -7,6 +7,7 @@ import { Grupos } from "../pages/Grupos";
 import { Perfil } from "../pages/Perfil";
 import { Login } from "../pages/Login";
 import { Cadastro } from "../pages/Cadastro";
+import { DenunciasUser } from "../pages/DenunciasUser";
 
 export function AppRoutes() {
   return (
@@ -44,6 +45,11 @@ export function AppRoutes() {
         <Route
           path="/perfil"
           element={<Perfil />}
+        />
+
+        <Route
+          path="/denuncia/user"
+          element={<DenunciasUser />}
         />
       </Routes>
     </BrowserRouter>
