@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
   FiUsers,
@@ -9,85 +9,128 @@ import {
   FiMonitor,
 } from "react-icons/fi";
 import { DashboardLayout } from "../components/DashboardLayout";
+import { api } from "../../service/api";
 
-type StatusDenuncia = "ABERTA" | "FECHADA";
+export type StatusDenuncia =
+  | "ABERTA"
+  | "EM_ANDAMENTO"
+  | "FECHADA";
 
-interface Denuncia {
+export interface Denuncia {
   id: number;
-  usuario: string;
+  nomeUsuario: string;
+  email: string;
   endereco: string;
   contato: string;
-  email: string;
-  auxilio: string;
   status: StatusDenuncia;
+  descricao: string;
+  dataDenuncia: string;
+  atualizadoEm: string;
 }
 
-// Dados fictícios para desenvolver a interface
-const denunciasMock: Denuncia[] = [
-  {
-    id: 1,
-    usuario: "Jane Cooper",
-    endereco: "Rua tal, 25",
-    contato: "(206) 555-0100",
-    email: "jane.cooper@email.com",
-    auxilio: "Sim",
-    status: "FECHADA",
-  },
-  {
-    id: 2,
-    usuario: "Floyd Miles",
-    endereco: "Rua tal",
-    contato: "(206) 555-0199",
-    email: "floyd.miles@email.com",
-    auxilio: "Sim",
-    status: "ABERTA",
-  },
-  {
-    id: 3,
-    usuario: "Ronald Richards",
-    endereco: "Rua Adélia",
-    contato: "(206) 555-0177",
-    email: "ronald.richards@email.com",
-    auxilio: "Sim",
-    status: "ABERTA",
-  },
-  {
-    id: 4,
-    usuario: "Marvin McKinney",
-    endereco: "Rua Tupã",
-    contato: "(206) 555-0125",
-    email: "marvin@email.com",
-    auxilio: "Não",
-    status: "FECHADA",
-  },
-  {
-    id: 5,
-    usuario: "Cody Fisher",
-    endereco: "Av. Brasil, 120",
-    contato: "(206) 555-0145",
-    email: "cody@email.com",
-    auxilio: "Sim",
-    status: "ABERTA",
-  },
-  {
-    id: 6,
-    usuario: "Esther Howard",
-    endereco: "Rua das Flores",
-    contato: "(206) 555-0160",
-    email: "esther@email.com",
-    auxilio: "Não",
-    status: "FECHADA",
-  },
-];
+export interface PaginaDenuncias {
+  content: Denuncia[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+  size: number;
+  first: boolean;
+  last: boolean;
+}
+
+// LISTAR DENÚNCIAS
+export async function listarDenuncias(
+  pagina = 0,
+  tamanho = 10
+): Promise<PaginaDenuncias> {
+  const response = await api.get("/denuncias/admin/todas", {
+    params: {
+      pagina,
+      tamanho,
+    },
+  });
+
+  return response.data;
+}
+
+// ATUALIZAR STATUS
+export async function atualizarStatusDenuncia(
+  id: number,
+  status: StatusDenuncia
+): Promise<Denuncia> {
+  const response = await api.put(`/denuncias/${id}/status`, {
+    status,
+  });
+
+  return response.data;
+}
+
 
 export function DenunciasUser() {
+
+  const [denuncias, setDenuncias] = useState<Denuncia[]>([]);
+
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("TODOS");
 
-  // Filtra os registros de acordo com a pesquisa e o status
-  const denunciasFiltradas = denunciasMock.filter((denuncia) => {
+  const [pagina, setPagina] = useState(0);
+  const [totalPaginas, setTotalPaginas] = useState(0);
+  const [totalDenuncias, setTotalDenuncias] = useState(0);
+
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState("");
+
+  // Busca as denúncias no backend
+  async function carregarDenuncias() {
+    try {
+      setLoading(true);
+      setErro("");
+
+      const resposta = await listarDenuncias(pagina, 10);
+
+      setDenuncias(resposta.content);
+      setTotalPaginas(resposta.totalPages);
+      setTotalDenuncias(resposta.totalElements);
+
+    } catch (error) {
+      console.error("Erro ao buscar denúncias:", error);
+      setErro("Não foi possível carregar as denúncias.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    carregarDenuncias();
+  }, [pagina]);
+
+  // Atualiza o status de uma denúncia
+  async function alterarStatus(
+    id: number,
+    novoStatus: StatusDenuncia
+  ) {
+    try {
+      const denunciaAtualizada = await atualizarStatusDenuncia(
+        id,
+        novoStatus
+      );
+
+      setDenuncias((anteriores) =>
+        anteriores.map((denuncia) =>
+          denuncia.id === id ? denunciaAtualizada : denuncia
+        )
+      );
+
+    } catch (error) {
+      console.error("Erro ao atualizar status:", error);
+      alert("Não foi possível atualizar o status.");
+    }
+  }
+
+  // Pesquisa e filtros
+  const denunciasFiltradas = denuncias.filter((denuncia) => {
     const correspondePesquisa =
-      denuncia.usuario.toLowerCase().includes(search.toLowerCase()) ||
+      denuncia.nomeUsuario.toLowerCase().includes(search.toLowerCase()) ||
       denuncia.email.toLowerCase().includes(search.toLowerCase()) ||
       denuncia.endereco.toLowerCase().includes(search.toLowerCase());
 
@@ -97,6 +140,16 @@ export function DenunciasUser() {
 
     return correspondePesquisa && correspondeStatus;
   });
+
+  // Indicadores da página atual
+  const abertas = denuncias.filter(
+    (d) => d.status === "ABERTA"
+  ).length;
+
+  const emAndamento = denuncias.filter(
+    (d) => d.status === "EM_ANDAMENTO"
+  ).length;
+ 
 
   return (
     <DashboardLayout>
@@ -113,8 +166,10 @@ export function DenunciasUser() {
             </StatIcon>
 
             <StatInfo>
+              {/* <span>Denúncias abertas</span>
+              <strong>25</strong> */}
               <span>Denúncias abertas</span>
-              <strong>25</strong>
+              <strong>{abertas}</strong> 
             </StatInfo>
           </StatCard>
 
@@ -124,8 +179,8 @@ export function DenunciasUser() {
             </StatIcon>
 
             <StatInfo>
-              <span>Denúncias analisadas</span>
-              <strong>100</strong>
+              <span>Em andamento</span>
+              <strong>{emAndamento}</strong>
             </StatInfo>
           </StatCard>
 
@@ -135,11 +190,21 @@ export function DenunciasUser() {
             </StatIcon>
 
             <StatInfo>
+              {/* <span>Total de denúncias</span>
+              <strong>367</strong> */}
               <span>Total de denúncias</span>
-              <strong>367</strong>
+              <strong>{totalDenuncias}</strong> 
             </StatInfo>
           </StatCard>
         </StatsContainer>
+
+        {loading && <p>Carregando denúncias...</p>}
+        {erro && <p>{erro}</p>}
+        {!loading && !erro && (
+          <TableWrapper>
+            {/* Sua tabela atual */}
+          </TableWrapper>
+        )}
 
         {/* Tabela */}
         <TableCard>
@@ -177,7 +242,8 @@ export function DenunciasUser() {
                   <th>Endereço</th>
                   <th>Contato</th>
                   <th>Email</th>
-                  <th>Auxílio</th>
+                  {/* <th>Auxílio</th> */}
+                  <th>Descrição</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -185,18 +251,26 @@ export function DenunciasUser() {
               <tbody>
                 {denunciasFiltradas.map((denuncia) => (
                   <tr key={denuncia.id}>
-                    <td>{denuncia.usuario}</td>
-                    <td>{denuncia.endereco}</td>
-                    <td>{denuncia.contato}</td>
+                    <td>{denuncia.nomeUsuario}</td>
+                    <td>{denuncia.endereco || "Não informado"}</td>
+                    <td>{denuncia.contato || "Não informado"}</td>
                     <td>{denuncia.email}</td>
-                    <td>{denuncia.auxilio}</td>
+                    <td>{denuncia.descricao || "Sem descrição"}</td>
 
                     <td>
-                      <StatusBadge $status={denuncia.status}>
-                        {denuncia.status === "ABERTA"
-                          ? "Aberta"
-                          : "Fechada"}
-                      </StatusBadge>
+                      <StatusSelect
+                        value={denuncia.status}
+                        onChange={(e) =>
+                          alterarStatus(
+                            denuncia.id,
+                            e.target.value as StatusDenuncia
+                          )
+                        }
+                      >
+                        <option value="ABERTA">Aberta</option>
+                        <option value="EM_ANDAMENTO">Em andamento</option>
+                        <option value="FECHADA">Fechada</option>
+                      </StatusSelect>
                     </td>
                   </tr>
                 ))}
@@ -215,19 +289,33 @@ export function DenunciasUser() {
           </TableWrapper>
 
           <TableFooter>
+           
+
             <span>
               Mostrando {denunciasFiltradas.length} de{" "}
-              {denunciasMock.length} denúncias
+              {totalDenuncias} denúncias
             </span>
 
+            
+
             <Pagination>
-              <PageButton disabled>{"<"}</PageButton>
-              <PageButton $active>1</PageButton>
-              <PageButton>2</PageButton>
-              <PageButton>3</PageButton>
-              <span>...</span>
-              <PageButton>40</PageButton>
-              <PageButton>{">"}</PageButton>
+              <PageButton
+                disabled={pagina === 0}
+                onClick={() => setPagina((p) => p - 1)}
+              >
+                {"<"}
+              </PageButton>
+
+              <span>
+                Página {pagina + 1} de {totalPaginas}
+              </span>
+
+              <PageButton
+                disabled={pagina + 1 >= totalPaginas}
+                onClick={() => setPagina((p) => p + 1)}
+              >
+                {">"}
+              </PageButton>
             </Pagination>
           </TableFooter>
         </TableCard>
@@ -302,6 +390,21 @@ const StatInfo = styled.div`
   strong {
     font-size: 1.25rem;
     color: #333;
+  }
+`;
+
+const StatusSelect = styled.select`
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #555;
+  font-size: 0.7rem;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #b68ab0;
   }
 `;
 

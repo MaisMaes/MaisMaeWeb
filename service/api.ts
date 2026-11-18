@@ -3,7 +3,8 @@ import type { News } from "../src/pages/Publicacoes";
 
 //endpoint para login 
 export const api = axios.create({
-  baseURL: "https://maismaes-api-hda7beaud2frbvfz.canadacentral-01.azurewebsites.net",
+  // baseURL: "https://maismaes-api-hda7beaud2frbvfz.canadacentral-01.azurewebsites.net",
+  baseURL: "http://localhost:8080",
 });
 
 export async function getNews(page = 0, size = 10) {
